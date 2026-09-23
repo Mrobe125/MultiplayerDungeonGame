@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceSpawner : MonoBehaviour
 {
     [Header("Resource Settings")]
-    [SerializeField] private GameObject resourcePrefab;
+    [SerializeField] private List<GameObject> resourcePrefabs = new List<GameObject>(); 
     [SerializeField] private int resourceCount;
 
     [Header("Spawn Area Settings")]
@@ -21,16 +22,25 @@ public class ResourceSpawner : MonoBehaviour
 
     void SpawnResource()
     {
-        for(float x = negativePos.x; x < positivePos.x; x += _distanceBewteenCheck)
+        if (resourcePrefabs == null || resourcePrefabs.Count == 0)
+        {
+            Debug.LogWarning("No resource prefabs assigned to ResourceSpawner.");
+            return;
+        }
+
+        for (float x = negativePos.x; x < positivePos.x; x += _distanceBewteenCheck)
         {
             for (float z = negativePos.y; z < positivePos.y; z += _distanceBewteenCheck)
             {
                 RaycastHit hit;
-                if(Physics.Raycast(new Vector3(x, heightOfCheck,z),Vector3.down,out hit,rangeofCheck, groundLayer))
+                if (Physics.Raycast(new Vector3(x, heightOfCheck, z), Vector3.down, out hit, rangeofCheck, groundLayer))
                 {
-                    if(resourceCount > Random.Range(0,101))
+                    if (resourceCount > Random.Range(0, 101))
                     {
-                        Instantiate(resourcePrefab, hit.point, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), transform);
+                        int randomIndex = Random.Range(0, resourcePrefabs.Count);
+                        GameObject selectedPrefab = resourcePrefabs[randomIndex];
+
+                        Instantiate(selectedPrefab, hit.point, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), transform);
                     }
                 }
             }
