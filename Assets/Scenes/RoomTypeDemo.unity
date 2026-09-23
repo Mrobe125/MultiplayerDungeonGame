@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6816233952214456790, guid: b1ff21f329cd4d242a5b58d336063ab0, type: 3}
       propertyPath: m_Name
-      value: BasicIntersectingStraightHallway (1)
+      value: BasicIntersectingStraightHallway
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
