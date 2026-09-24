@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1316989391062525850}
   - component: {fileID: 5227890505326921205}
+  - component: {fileID: 5451401223457903286}
   m_Layer: 0
   m_Name: BasicSingleSpaceHallway
   m_TagString: Untagged
@@ -54,6 +55,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomBehaviour
   walls: []
   doors: []
+--- !u!114 &5451401223457903286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2511516316284224375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1df10c011c04b8478483351487a5fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  resourcePrefabs:
+  - {fileID: 123292, guid: df22dae66d96c2944adb65e1661878de, type: 3}
+  - {fileID: 158108, guid: eab88f6a71881d8468474cc3e3610734, type: 3}
+  - {fileID: 130356, guid: 3bb587ec23f47d94f9fda50197c8fb66, type: 3}
+  - {fileID: 133660, guid: 971412afe90b27640b1c78c0641deec9, type: 3}
+  - {fileID: 149244, guid: 2835e173a7421ca499f76d4b7867306f, type: 3}
+  - {fileID: 144976, guid: 045cc9e875b3f1f48b4774837b97b949, type: 3}
+  - {fileID: 176990, guid: 6a57b9f39fb08014aabf0466d55fedb9, type: 3}
+  - {fileID: 198910, guid: 98721e9eb8d07ad4b8d521e08f41e5ae, type: 3}
+  - {fileID: 100710, guid: 80afd7216bd97804b8df01616325b783, type: 3}
+  resourceCount: 10
+  _distanceBewteenCheck: 1
+  heightOfCheck: 2
+  rangeofCheck: 30
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &291698873093687828
 PrefabInstance:
   m_ObjectHideFlags: 0

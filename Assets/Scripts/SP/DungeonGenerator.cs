@@ -90,6 +90,7 @@ public class DungeonGenerator : MonoBehaviour
                     newRoom.UpdateRoom(currentCell.status);
                     newRoom.name += " " + i + "-" + j;
 
+
                 }
             }
         }

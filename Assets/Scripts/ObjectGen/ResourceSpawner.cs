@@ -12,10 +12,17 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField]private float heightOfCheck = 10f, rangeofCheck =30f;
     [SerializeField] private LayerMask groundLayer;
 
-    //[Header("Gizmo Visualization")]
-    //[SerializeField] private bool showGizmos = true;
-    //[SerializeField] private Color areaGizmoColor = new Color(0f, 1f, 0f, 0.3f);
-    //[SerializeField] private Color rayGizmoColor = Color.cyan;
+    [Header("Manual Bounds Settings")]
+    [SerializeField] private bool useManualBounds = false;
+    [SerializeField] private Vector3 customBoundsSize = new Vector3(10f, 5f, 10f);
+
+    [Header("Spawn Inset")]
+    [SerializeField] private float wallPadding = 1.0f;
+
+    [Header("Gizmo Visualization")]
+    [SerializeField] private bool showGizmos = true;
+    [SerializeField] private Color areaGizmoColor = new Color(0f, 1f, 0f, 0.3f);
+    [SerializeField] private Color rayGizmoColor = Color.cyan;
 
     private Bounds roomBounds;
 
@@ -28,6 +35,12 @@ public class ResourceSpawner : MonoBehaviour
 
     private void CalculateBounds()
     {
+        if (useManualBounds)
+        {
+            roomBounds = new Bounds(transform.position, customBoundsSize);
+            return;
+        }
+
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
 
         if (renderers.Length == 0)
@@ -45,15 +58,17 @@ public class ResourceSpawner : MonoBehaviour
 
     void SpawnResource()
     {
-        if (resourcePrefabs == null || resourcePrefabs.Count == 0)
-        {
-            Debug.LogWarning("No resource prefabs assigned to ResourceSpawner.");
-            return;
-        }
+        if (resourcePrefabs == null || resourcePrefabs.Count == 0) return;
+        if (_distanceBewteenCheck <= 0.01f) return;
 
-        for (float x = roomBounds.min.x; x <= roomBounds.max.x; x += _distanceBewteenCheck)
+        float minX = roomBounds.min.x + wallPadding;
+        float maxX = roomBounds.max.x - wallPadding;
+        float minZ = roomBounds.min.z + wallPadding;
+        float maxZ = roomBounds.max.z - wallPadding;
+
+        for (float x = minX; x <= maxX; x += _distanceBewteenCheck)
         {
-            for (float z = roomBounds.min.z; z <= roomBounds.max.z; z += _distanceBewteenCheck)
+            for (float z = minZ; z <= maxZ; z += _distanceBewteenCheck)
             {
                 Vector3 rayOrigin = new Vector3(x, roomBounds.max.y + heightOfCheck, z);
 
@@ -71,25 +86,25 @@ public class ResourceSpawner : MonoBehaviour
         }
     }
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    if (!showGizmos) return;
+    private void OnDrawGizmosSelected()
+    {
+        if (!showGizmos) return;
 
-    //    CalculateBounds();
+        CalculateBounds();
 
-    //    Gizmos.color = areaGizmoColor;
-    //    Gizmos.DrawWireCube(roomBounds.center, roomBounds.size);
+        Gizmos.color = areaGizmoColor;
+        Gizmos.DrawWireCube(roomBounds.center, roomBounds.size);
 
-    //    Gizmos.color = rayGizmoColor;
-    //    if (_distanceBewteenCheck <= 0.1f) return; 
+        Gizmos.color = rayGizmoColor;
+        if (_distanceBewteenCheck <= 0.1f) return;
 
-    //    for (float x = roomBounds.min.x; x <= roomBounds.max.x; x += _distanceBewteenCheck)
-    //    {
-    //        for (float z = roomBounds.min.z; z <= roomBounds.max.z; z += _distanceBewteenCheck)
-    //        {
-    //            Vector3 rayOrigin = new Vector3(x, roomBounds.max.y + heightOfCheck, z);
-    //            Gizmos.DrawRay(rayOrigin, Vector3.down * rangeofCheck);
-    //        }
-    //    }
-    //}
+        for (float x = roomBounds.min.x; x <= roomBounds.max.x; x += _distanceBewteenCheck)
+        {
+            for (float z = roomBounds.min.z; z <= roomBounds.max.z; z += _distanceBewteenCheck)
+            {
+                Vector3 rayOrigin = new Vector3(x, roomBounds.max.y + heightOfCheck, z);
+                Gizmos.DrawRay(rayOrigin, Vector3.down * rangeofCheck);
+            }
+        }
+    }
 }
