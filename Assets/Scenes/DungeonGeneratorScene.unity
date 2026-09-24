@@ -464,7 +464,7 @@ MonoBehaviour:
   size: {x: 5, y: 5}
   startPos: 0
   rooms:
-  - room: {fileID: 2484303628324681947, guid: a59f481454f5c2642b4208ff7546fe90, type: 3}
+  - room: {fileID: 2511516316284224375, guid: c05b64851bf56c046b7a24e32654c66d, type: 3}
     minPosition: {x: 0, y: 0}
     maxPosition: {x: 0, y: 0}
     obligatory: 1

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6009026648894032587}
+  - component: {fileID: 7961800473073971571}
   m_Layer: 0
   m_Name: StairHallway
   m_TagString: Untagged
@@ -55,6 +56,20 @@ Transform:
   - {fileID: 973825443008600165}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7961800473073971571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906545908163588637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776b897f8329cc944a3ce6ad3a1352c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomBehaviour
+  walls: []
+  doors: []
 --- !u!1 &2024269103067791692
 GameObject:
   m_ObjectHideFlags: 0
