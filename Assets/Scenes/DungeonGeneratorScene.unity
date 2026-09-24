@@ -461,7 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2a033a21e0b4b4492636691f30a5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonGenerator
-  size: {x: 5, y: 5}
+  size: {x: 6, y: 6}
   startPos: 0
   rooms:
   - room: {fileID: 2511516316284224375, guid: c05b64851bf56c046b7a24e32654c66d, type: 3}
