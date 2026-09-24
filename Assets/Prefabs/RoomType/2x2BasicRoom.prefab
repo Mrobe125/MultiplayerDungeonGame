@@ -691,7 +691,7 @@ GameObject:
   - component: {fileID: 8874637396963388003}
   - component: {fileID: 6636497981788105289}
   - component: {fileID: 492101656306387986}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1457,7 +1457,7 @@ GameObject:
   - component: {fileID: 6317913048707051630}
   - component: {fileID: 3037940467356247159}
   - component: {fileID: 6915790163352479570}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1569,7 +1569,7 @@ GameObject:
   - component: {fileID: 6136829421866267004}
   - component: {fileID: 91163887645614981}
   - component: {fileID: 2699721707723004309}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1883,7 +1883,7 @@ GameObject:
   - component: {fileID: 6883150727506872974}
   - component: {fileID: 2448688658910215858}
   - component: {fileID: 9134055935339453078}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

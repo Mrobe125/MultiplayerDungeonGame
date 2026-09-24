@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 6056177195625379488}
   - component: {fileID: 4489257828516166983}
   - component: {fileID: 4013064210606953347}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 8911157614073508587}
   - component: {fileID: 8340234377377854995}
   - component: {fileID: 7118390596771738896}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -755,7 +755,7 @@ GameObject:
   - component: {fileID: 3758603609393981819}
   - component: {fileID: 6543242359415433805}
   - component: {fileID: 6744846249789136148}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1563,7 +1563,7 @@ GameObject:
   - component: {fileID: 8068711771692863450}
   - component: {fileID: 4241390617907545375}
   - component: {fileID: 3441228743465096114}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2525,7 +2525,7 @@ GameObject:
   - component: {fileID: 4766658159540881399}
   - component: {fileID: 3602367078564966869}
   - component: {fileID: 7075081506390923240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2817,7 +2817,7 @@ GameObject:
   - component: {fileID: 2080471318114781456}
   - component: {fileID: 3177807722858233996}
   - component: {fileID: 7152125188144427206}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3153,7 +3153,7 @@ GameObject:
   - component: {fileID: 2383133438676517918}
   - component: {fileID: 5068111499234001786}
   - component: {fileID: 5509186627120244264}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3265,7 +3265,7 @@ GameObject:
   - component: {fileID: 4397406467836362627}
   - component: {fileID: 5627740856942386553}
   - component: {fileID: 198647058325308302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3377,7 +3377,7 @@ GameObject:
   - component: {fileID: 5994079845091524779}
   - component: {fileID: 9022234363093189884}
   - component: {fileID: 6810872485939122195}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SM_Env_Tiles_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
