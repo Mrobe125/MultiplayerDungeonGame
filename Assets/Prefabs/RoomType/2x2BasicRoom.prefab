@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6475959139336305199}
   - component: {fileID: 2748309135904534432}
   - component: {fileID: 3650146045418990788}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,6 +186,10 @@ MonoBehaviour:
   resourceLayer:
     serializedVersion: 2
     m_Bits: 128
+  wallCheckDistance: 2
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &556198206183009588
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +381,7 @@ GameObject:
   - component: {fileID: 1792124612858275390}
   - component: {fileID: 5705323640274474320}
   - component: {fileID: 341543213246703105}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +471,7 @@ GameObject:
   - component: {fileID: 7962473435645869478}
   - component: {fileID: 8801246560202306131}
   - component: {fileID: 8938062239989393578}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -557,7 +561,7 @@ GameObject:
   - component: {fileID: 7966166289818147793}
   - component: {fileID: 2453683020083273066}
   - component: {fileID: 7054852322973221617}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -647,7 +651,7 @@ GameObject:
   - component: {fileID: 8876153555313124363}
   - component: {fileID: 3565125118722604772}
   - component: {fileID: 1232649336691498014}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -964,7 +968,7 @@ GameObject:
   - component: {fileID: 5952860066267599508}
   - component: {fileID: 4059971231630855719}
   - component: {fileID: 2878974081682269300}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_DoorFrame_Round_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1347,7 +1351,7 @@ GameObject:
   - component: {fileID: 6087042220208089777}
   - component: {fileID: 2571971105471222925}
   - component: {fileID: 7668120375037969988}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_DoorFrame_Round_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1727,7 +1731,7 @@ GameObject:
   - component: {fileID: 1065421628236601201}
   - component: {fileID: 2281019807408973277}
   - component: {fileID: 3866783876098961065}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

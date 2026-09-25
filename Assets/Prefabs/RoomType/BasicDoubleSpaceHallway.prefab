@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 3217362859932582948}
   - component: {fileID: 8128118373125735865}
   - component: {fileID: 2033258793579860383}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -755,7 +755,7 @@ GameObject:
   - component: {fileID: 9097745429984970630}
   - component: {fileID: 1684333284503137861}
   - component: {fileID: 3595423689978068806}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,7 +845,7 @@ GameObject:
   - component: {fileID: 4793312004554704911}
   - component: {fileID: 4967016254804148857}
   - component: {fileID: 5603171433108735548}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1285,7 +1285,7 @@ GameObject:
   - component: {fileID: 70467514569432593}
   - component: {fileID: 5056702030465487801}
   - component: {fileID: 6197672204319424463}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Env_Wall_Culled_04 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
