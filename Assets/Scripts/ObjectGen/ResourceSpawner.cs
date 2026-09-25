@@ -102,18 +102,49 @@ public class ResourceSpawner : MonoBehaviour
                     int randomIndex = Random.Range(0, resourcePrefabs.Count);
                     GameObject selectedPrefab = resourcePrefabs[randomIndex];
 
+                    Quaternion rotation = GetWallFacingRotation(hit.point);
+
                     Instantiate(
                         selectedPrefab,
                         hit.point,
-                        Quaternion.Euler(
-                            0f,
-                            Random.Range(0f, 360f),
-                            0f
-                        ),
+                        rotation,
                         transform
                     );
                 }
             }
         }
     }
+
+    private Quaternion GetWallFacingRotation(Vector3 spawnPosition)
+    {
+        float distanceToNorthWall = Mathf.Abs(roomBounds.max.z - spawnPosition.z);
+        float distanceToSouthWall = Mathf.Abs(spawnPosition.z - roomBounds.min.z);
+        float distanceToEastWall = Mathf.Abs(roomBounds.max.x - spawnPosition.x);
+        float distanceToWestWall = Mathf.Abs(spawnPosition.x - roomBounds.min.x);
+
+        float closestDistance = Mathf.Min(
+            distanceToNorthWall,
+            distanceToSouthWall,
+            distanceToEastWall,
+            distanceToWestWall
+        );
+
+        if (closestDistance == distanceToNorthWall)
+        {
+            return Quaternion.Euler(0f, 180f, 0f);
+        }
+
+        if (closestDistance == distanceToSouthWall)
+        {
+            return Quaternion.Euler(0f, 0f, 0f);
+        }
+
+        if (closestDistance == distanceToEastWall)
+        {
+            return Quaternion.Euler(0f, -90f, 0f);
+        }
+
+        return Quaternion.Euler(0f, 90f, 0f);
+    }
 }
+
