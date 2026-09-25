@@ -307,6 +307,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220007286870817070, guid: 0449f519a79456d4daf91a1fc99d868c, type: 3}
+      propertyPath: showGizmos
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220007286870817070, guid: 0449f519a79456d4daf91a1fc99d868c, type: 3}
+      propertyPath: _distanceBewteenCheck
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220007286870817070, guid: 0449f519a79456d4daf91a1fc99d868c, type: 3}
       propertyPath: 'resourcePrefabs.Array.data[0]'
       value: 
       objectReference: {fileID: 133660, guid: 971412afe90b27640b1c78c0641deec9, type: 3}
@@ -390,6 +398,10 @@ PrefabInstance:
     - target: {fileID: 2511516316284224375, guid: c05b64851bf56c046b7a24e32654c66d, type: 3}
       propertyPath: m_Name
       value: BasicSingleSpaceHallway
+      objectReference: {fileID: 0}
+    - target: {fileID: 5451401223457903286, guid: c05b64851bf56c046b7a24e32654c66d, type: 3}
+      propertyPath: _distanceBewteenCheck
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -574,8 +586,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2293302375571393952, guid: f09333bdeeeeea94ab3bc6d4919bd213, type: 3}
+      propertyPath: showGizmos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2293302375571393952, guid: f09333bdeeeeea94ab3bc6d4919bd213, type: 3}
+      propertyPath: wallPadding
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -2293302375571393952, guid: f09333bdeeeeea94ab3bc6d4919bd213, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: -2293302375571393952, guid: f09333bdeeeeea94ab3bc6d4919bd213, type: 3}
+      propertyPath: _distanceBewteenCheck
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 429127192768614464, guid: f09333bdeeeeea94ab3bc6d4919bd213, type: 3}
       propertyPath: m_Layer
@@ -1070,6 +1094,18 @@ PrefabInstance:
     - target: {fileID: 2874888199840509629, guid: a591f100d1bc73345b3c3083fbd937e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120202914788743545, guid: a591f100d1bc73345b3c3083fbd937e6, type: 3}
+      propertyPath: showGizmos
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120202914788743545, guid: a591f100d1bc73345b3c3083fbd937e6, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120202914788743545, guid: a591f100d1bc73345b3c3083fbd937e6, type: 3}
+      propertyPath: _distanceBewteenCheck
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

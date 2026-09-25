@@ -286,9 +286,10 @@ MonoBehaviour:
   useManualBounds: 0
   customBoundsSize: {x: 10, y: 5, z: 10}
   wallPadding: 1
-  showGizmos: 0
-  areaGizmoColor: {r: 0, g: 1, b: 0, a: 0.3}
-  rayGizmoColor: {r: 0, g: 1, b: 1, a: 1}
+  spawnRadius: 0.75
+  resourceLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &5054532218214798483
 GameObject:
   m_ObjectHideFlags: 0
