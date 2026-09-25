@@ -68,22 +68,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
   resourcePrefabs:
-  - {fileID: 123292, guid: df22dae66d96c2944adb65e1661878de, type: 3}
-  - {fileID: 158108, guid: eab88f6a71881d8468474cc3e3610734, type: 3}
-  - {fileID: 130356, guid: 3bb587ec23f47d94f9fda50197c8fb66, type: 3}
   - {fileID: 133660, guid: 971412afe90b27640b1c78c0641deec9, type: 3}
   - {fileID: 149244, guid: 2835e173a7421ca499f76d4b7867306f, type: 3}
   - {fileID: 144976, guid: 045cc9e875b3f1f48b4774837b97b949, type: 3}
   - {fileID: 176990, guid: 6a57b9f39fb08014aabf0466d55fedb9, type: 3}
-  - {fileID: 198910, guid: 98721e9eb8d07ad4b8d521e08f41e5ae, type: 3}
-  - {fileID: 100710, guid: 80afd7216bd97804b8df01616325b783, type: 3}
   resourceCount: 10
-  _distanceBewteenCheck: 1
-  heightOfCheck: 2
+  _distanceBewteenCheck: 0
+  heightOfCheck: 10
   rangeofCheck: 30
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  useManualBounds: 0
+  customBoundsSize: {x: 10, y: 5, z: 10}
+  wallPadding: 1
+  showGizmos: 0
+  areaGizmoColor: {r: 0, g: 1, b: 0, a: 0.3}
+  rayGizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1001 &291698873093687828
 PrefabInstance:
   m_ObjectHideFlags: 0

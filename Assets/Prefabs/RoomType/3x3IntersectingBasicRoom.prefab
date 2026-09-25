@@ -483,6 +483,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9157639262196002430}
   - component: {fileID: 3610877951701110679}
+  - component: {fileID: -2293302375571393952}
   m_Layer: 0
   m_Name: 3x3IntersectingBasicRoom
   m_TagString: Untagged
@@ -553,6 +554,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomBehaviour
   walls: []
   doors: []
+--- !u!114 &-2293302375571393952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304056624771599299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1df10c011c04b8478483351487a5fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceSpawner
+  resourcePrefabs:
+  - {fileID: 133660, guid: 971412afe90b27640b1c78c0641deec9, type: 3}
+  - {fileID: 149244, guid: 2835e173a7421ca499f76d4b7867306f, type: 3}
+  - {fileID: 144976, guid: 045cc9e875b3f1f48b4774837b97b949, type: 3}
+  - {fileID: 176990, guid: 6a57b9f39fb08014aabf0466d55fedb9, type: 3}
+  resourceCount: 10
+  _distanceBewteenCheck: 0
+  heightOfCheck: 10
+  rangeofCheck: 30
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  useManualBounds: 0
+  customBoundsSize: {x: 10, y: 5, z: 10}
+  wallPadding: 1
+  showGizmos: 0
+  areaGizmoColor: {r: 0, g: 1, b: 0, a: 0.3}
+  rayGizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &1416312428537547980
 GameObject:
   m_ObjectHideFlags: 0
