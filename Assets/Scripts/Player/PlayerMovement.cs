@@ -1,15 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
+using Photon.Realtime;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviourPunCallbacks
 {
+    [Header("Network Identity")]
+    [HideInInspector] public int id;
+    public Player photonPlayer;
+
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float jumpForce = 5.0f;
 
     [Header("Camera & Look Settings")]
-    [SerializeField] private Transform cameraTransform; 
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Camera playerCamera;
+    //[SerializeField] private AudioListener audioListener;
     [SerializeField] private float mouseSensitivity = 0.1f;
     [SerializeField] private float maxPitch = 80.0f;
     [SerializeField] private float minPitch = -80.0f;
@@ -32,17 +40,38 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (cameraTransform == null && Camera.main != null)
+        if (photonView.IsMine)
         {
-            cameraTransform = Camera.main.transform;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            if (playerCamera != null) playerCamera.enabled = true;
+            //if (audioListener != null) audioListener.enabled = true;
         }
+        else
+        {
+            // Disable remote camera and audio listener to prevent overriding local player view
+            if (playerCamera != null) playerCamera.enabled = false;
+            //if (audioListener != null) audioListener.enabled = false;
+
+            // Disable physics simulation for remote network avatars
+            rb.isKinematic = true;
+        }
+    }
+
+    [PunRPC]
+    public void InitializePlayer(Player player)
+    {
+        photonPlayer = player;
+        id = player.ActorNumber;
     }
 
     private void Update()
     {
+        // Only run movement and camera inputs for the local player instance
+        if (!photonView.IsMine) return;
+
+        // Ground Check
         if (groundCheck != null)
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
@@ -57,29 +86,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
+
         HandleMovement();
     }
 
-
+    #region Input System Callbacks
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (!photonView.IsMine) return;
         moveInput = context.ReadValue<Vector2>();
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
+        if (!photonView.IsMine) return;
         lookInput = context.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (!photonView.IsMine) return;
+
         if (context.performed && isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
-
+    #endregion
 
     private void HandleLook()
     {

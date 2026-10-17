@@ -42,6 +42,7 @@ MonoBehaviour:
   - RespawnSpaceship
   - ChangeScene
   - UpdateLobbyUI
+  - InitializePlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
