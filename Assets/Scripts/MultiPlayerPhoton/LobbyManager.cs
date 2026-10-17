@@ -20,21 +20,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // Use ActorNumber to guarantee unique assignment (Player 1 -> Index 0, Player 2 -> Index 1)
-        int playerIndex = (PhotonNetwork.LocalPlayer.ActorNumber - 1) % availablePlayerPrefabs.Length;
+        // Calculate unique index based on ActorNumber (Player 1 -> Index 0, Player 2 -> Index 1)
+        int actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+        int playerIndex = Mathf.Abs(actorNum - 1) % availablePlayerPrefabs.Length;
         string assignedPrefabName = availablePlayerPrefabs[playerIndex].name;
 
-        // Save selection to local player's network properties
         Hashtable customProps = new Hashtable
         {
             { "AssignedPrefab", assignedPrefabName }
         };
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
-        Debug.Log($"[Lobby] Actor {PhotonNetwork.LocalPlayer.ActorNumber} assigned prefab: {assignedPrefabName}");
+        Debug.Log($"[Lobby] Local Actor {actorNum} assigned prefab: {assignedPrefabName}");
     }
 
-    // Call from UI "Start Game" Button (Master Client only)
     public void StartGame(string gameSceneName)
     {
         if (PhotonNetwork.IsMasterClient)

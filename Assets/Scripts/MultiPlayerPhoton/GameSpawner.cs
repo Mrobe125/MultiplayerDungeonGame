@@ -1,10 +1,19 @@
 using UnityEngine;
 using Photon.Pun;
 
-public class GameSpawner : MonoBehaviour
+public class GameSpawner : MonoBehaviourPunCallbacks
 {
     [Header("Spawn Locations")]
     [SerializeField] private Transform[] spawnPoints;
+
+    // Static flag prevents duplicates across script re-evaluations or scene reload events
+    private static bool hasSpawned = false;
+
+    private void Awake()
+    {
+        // Reset flag whenever the game scene loads afresh
+        hasSpawned = false;
+    }
 
     private void Start()
     {
@@ -16,23 +25,24 @@ public class GameSpawner : MonoBehaviour
 
     private void SpawnPlayer()
     {
+        // Stop execution if already spawned locally
+        if (hasSpawned) return;
+
         if (!PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("AssignedPrefab", out object prefabObj))
         {
-            Debug.LogError("No assigned prefab property found for LocalPlayer!");
+            Debug.LogError("[GameSpawner] No 'AssignedPrefab' custom property found for LocalPlayer!");
             return;
         }
 
         string prefabToSpawn = (string)prefabObj;
 
-        // Fallback to transform position if no spawn points are assigned in Inspector
         Vector3 spawnPosition = Vector3.zero;
         Quaternion spawnRotation = Quaternion.identity;
 
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
-            int spawnIndex = (PhotonNetwork.LocalPlayer.ActorNumber - 1) % spawnPoints.Length;
+            int spawnIndex = Mathf.Abs(PhotonNetwork.LocalPlayer.ActorNumber - 1) % spawnPoints.Length;
 
-            // Ensure array slot isn't null
             if (spawnPoints[spawnIndex] != null)
             {
                 spawnPosition = spawnPoints[spawnIndex].position;
@@ -41,14 +51,18 @@ public class GameSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No spawn points assigned in GameSpawner! Spawning at (0,0,0).");
+            Debug.LogWarning("[GameSpawner] No spawn points assigned in GameSpawner! Spawning at (0,0,0).");
         }
 
-        // Instantiate over the network
+        // Lock spawn state BEFORE network instantiation
+        hasSpawned = true;
+
         PhotonNetwork.Instantiate(
             prefabToSpawn,
             spawnPosition,
             spawnRotation
         );
+
+        Debug.Log($"[GameSpawner] Successfully spawned {prefabToSpawn} for Actor {PhotonNetwork.LocalPlayer.ActorNumber}");
     }
 }
