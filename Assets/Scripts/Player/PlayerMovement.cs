@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using Photon.Pun;
 using Photon.Realtime;
 
-[RequireComponent(typeof(Rigidbody), typeof(Collider))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(Animator))]
 public class PlayerMovement : MonoBehaviourPunCallbacks
 {
     [Header("Network Identity")]
@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     [Header("Camera & Look Settings")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Camera playerCamera;
-    //[SerializeField] private AudioListener audioListener;
     [SerializeField] private float mouseSensitivity = 0.1f;
     [SerializeField] private float maxPitch = 80.0f;
     [SerializeField] private float minPitch = -80.0f;
@@ -27,15 +26,24 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.2f;
 
+    [Header("Animation Settings")]
+    [SerializeField] private float animationDampTime = 0.1f;
+
+    private Animator _anim;
     private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float cameraPitch = 0.0f;
     private bool isGrounded;
 
+    // Hashes for optimal parameter updates
+    private static readonly int HorizontalHash = Animator.StringToHash("Horizontal");
+    private static readonly int VerticalHash = Animator.StringToHash("Vertical");
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -46,15 +54,10 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
             Cursor.visible = false;
 
             if (playerCamera != null) playerCamera.enabled = true;
-            //if (audioListener != null) audioListener.enabled = true;
         }
         else
         {
-            // Disable remote camera and audio listener to prevent overriding local player view
             if (playerCamera != null) playerCamera.enabled = false;
-            //if (audioListener != null) audioListener.enabled = false;
-
-            // Disable physics simulation for remote network avatars
             rb.isKinematic = true;
         }
     }
@@ -68,7 +71,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        // Only run movement and camera inputs for the local player instance
         if (!photonView.IsMine) return;
 
         // Ground Check
@@ -145,7 +147,14 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         right.Normalize();
 
         Vector3 moveDirection = (forward * moveInput.y + right * moveInput.x) * moveSpeed;
-
         rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
+
+        // --- Update Blend Tree Animator Parameters ---
+        // moveInput.x = Left/Right (-1 to 1) | moveInput.y = Forward/Backward (-1 to 1)
+        if (_anim != null)
+        {
+            _anim.SetFloat(HorizontalHash, moveInput.x, animationDampTime, Time.fixedDeltaTime);
+            _anim.SetFloat(VerticalHash, moveInput.y, animationDampTime, Time.fixedDeltaTime);
+        }
     }
 }
