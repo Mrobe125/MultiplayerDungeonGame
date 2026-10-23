@@ -123,10 +123,17 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            if (_anim != null)
-            {
-                _anim.SetBool(IsJumpHash, true);
-            }
+            // Broadcast jump state to all clients
+            photonView.RPC(nameof(RPC_SetJump), RpcTarget.All, true);
+        }
+    }
+
+    [PunRPC]
+    private void RPC_SetJump(bool jumping)
+    {
+        if (_anim != null)
+        {
+            _anim.SetBool(IsJumpHash, jumping);
         }
     }
     #endregion

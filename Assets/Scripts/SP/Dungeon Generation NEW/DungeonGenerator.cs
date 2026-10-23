@@ -19,13 +19,11 @@ public class DungeonGenerator : MonoBehaviour
     private List<DungeonRoom> placedRooms = new List<DungeonRoom>();
     public List<DungeonRoom> PlacedRooms => placedRooms;
 
-    private void Start()
+    public void GenerateDungeon(int seed)
     {
-        GenerateDungeon();
-    }
+        // Synchronize pseudo-random generation across all clients
+        Random.InitState(seed);
 
-    public void GenerateDungeon()
-    {
         ClearDungeon();
 
         if (!ValidateSettings()) return;

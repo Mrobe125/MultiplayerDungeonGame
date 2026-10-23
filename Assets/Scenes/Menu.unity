@@ -368,7 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
   availablePlayerPrefabs:
   - {fileID: 3231065740911776895, guid: 70ec3846442a9ff4c82d461c281e2bc0, type: 3}
-  - {fileID: 3231065740911776895, guid: 70ec3846442a9ff4c82d461c281e2bc0, type: 3}
+  - {fileID: 3231065740911776895, guid: 695eda9000cc9f24e82132ebee578b1b, type: 3}
 --- !u!1 &146741198
 GameObject:
   m_ObjectHideFlags: 0

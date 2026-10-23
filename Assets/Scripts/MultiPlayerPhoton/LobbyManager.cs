@@ -20,9 +20,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        // Calculate unique index based on ActorNumber (Player 1 -> Index 0, Player 2 -> Index 1)
+        // Photon ActorNumber starts at 1:
+        // Player 1 -> (1 - 1) % length = Index 0 (First Prefab)
+        // Player 2 -> (2 - 1) % length = Index 1 (Second Prefab)
         int actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
-        int playerIndex = Mathf.Abs(actorNum - 1) % availablePlayerPrefabs.Length;
+        int playerIndex = (actorNum - 1) % availablePlayerPrefabs.Length;
+
         string assignedPrefabName = availablePlayerPrefabs[playerIndex].name;
 
         Hashtable customProps = new Hashtable
@@ -31,7 +34,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         };
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
-        Debug.Log($"[Lobby] Local Actor {actorNum} assigned prefab: {assignedPrefabName}");
+
+        // Verification Log
+        Debug.Log($"[LobbyManager] Local Actor {actorNum} (Player #{actorNum}) assigned Prefab [{playerIndex}]: {assignedPrefabName}");
     }
 
     public void StartGame(string gameSceneName)

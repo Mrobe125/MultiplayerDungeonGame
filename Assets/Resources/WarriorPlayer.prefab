@@ -683,7 +683,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534693918306576331}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &3392501702893861279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2762,9 +2762,14 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 2
     Name: Vertical
+  - Type: 4
+    SynchronizeType: 1
+    Name: IsJump
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!1 &3285305787595000525
 GameObject:
   m_ObjectHideFlags: 0
