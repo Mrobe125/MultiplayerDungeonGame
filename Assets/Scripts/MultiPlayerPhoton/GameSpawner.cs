@@ -1,36 +1,41 @@
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 
 public class GameSpawner : MonoBehaviourPunCallbacks
 {
     [Header("Spawn Locations")]
     [SerializeField] private Transform[] spawnPoints;
 
-    // Static flag prevents duplicates across script re-evaluations or scene reload events
-    private static bool hasSpawned = false;
-
-    private void Awake()
-    {
-        // Reset flag whenever the game scene loads afresh
-        hasSpawned = false;
-    }
+    private bool hasSpawned = false;
 
     private void Start()
     {
-        if (PhotonNetwork.IsConnectedAndReady)
+        TrySpawnPlayer();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        TrySpawnPlayer();
+    }
+
+    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
+    {
+        if (targetPlayer.IsLocal && changedProps.ContainsKey("AssignedPrefab"))
         {
-            SpawnPlayer();
+            TrySpawnPlayer();
         }
     }
 
-    private void SpawnPlayer()
+    private void TrySpawnPlayer()
     {
-        // Stop execution if already spawned locally
         if (hasSpawned) return;
+
+        if (!PhotonNetwork.IsConnectedAndReady || !PhotonNetwork.InRoom) return;
 
         if (!PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("AssignedPrefab", out object prefabObj))
         {
-            Debug.LogError("[GameSpawner] No 'AssignedPrefab' custom property found for LocalPlayer!");
+            Debug.LogWarning($"[GameSpawner] Waiting for 'AssignedPrefab' custom property to sync for Actor {PhotonNetwork.LocalPlayer.ActorNumber}...");
             return;
         }
 
@@ -41,7 +46,7 @@ public class GameSpawner : MonoBehaviourPunCallbacks
 
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
-            int spawnIndex = Mathf.Abs(PhotonNetwork.LocalPlayer.ActorNumber - 1) % spawnPoints.Length;
+            int spawnIndex = (PhotonNetwork.LocalPlayer.ActorNumber - 1) % spawnPoints.Length;
 
             if (spawnPoints[spawnIndex] != null)
             {
@@ -49,15 +54,10 @@ public class GameSpawner : MonoBehaviourPunCallbacks
                 spawnRotation = spawnPoints[spawnIndex].rotation;
             }
         }
-        else
-        {
-            Debug.LogWarning("[GameSpawner] No spawn points assigned in GameSpawner! Spawning at (0,0,0).");
-        }
 
-        // Lock spawn state BEFORE network instantiation
         hasSpawned = true;
 
-        PhotonNetwork.Instantiate(
+        GameObject playerObj = PhotonNetwork.Instantiate(
             prefabToSpawn,
             spawnPosition,
             spawnRotation

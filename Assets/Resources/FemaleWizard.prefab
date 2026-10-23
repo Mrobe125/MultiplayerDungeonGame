@@ -2422,7 +2422,7 @@ GameObject:
   - component: {fileID: 6424562048774792671}
   - component: {fileID: 7595550118150071573}
   - component: {fileID: 8520618053066903676}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FemaleWizard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2699,7 +2699,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 1157870943614163480}
-  groundDistance: 0.4
+  groundDistance: 0.2
   animationDampTime: 0.1
 --- !u!114 &6424562048774792671
 MonoBehaviour:

@@ -2422,7 +2422,7 @@ GameObject:
   - component: {fileID: 6424562048774792671}
   - component: {fileID: 7595550118150071573}
   - component: {fileID: 8520618053066903676}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WarriorPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
