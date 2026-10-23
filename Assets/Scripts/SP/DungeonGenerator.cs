@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonGenerator : MonoBehaviour
+public class DungeonGeneratorOld : MonoBehaviour
 {
     public class Cell
     {
@@ -23,7 +23,7 @@ public class DungeonGenerator : MonoBehaviour
         {
             // 0 - cannot spawn 1 - can spawn 2 - HAS to spawn
 
-            if (x>= minPosition.x && x<=maxPosition.x && y >= minPosition.y && y <= maxPosition.y)
+            if (x >= minPosition.x && x <= maxPosition.x && y >= minPosition.y && y <= maxPosition.y)
             {
                 return obligatory ? 2 : 1;
             }
@@ -35,6 +35,8 @@ public class DungeonGenerator : MonoBehaviour
 
     public Vector2Int size;
     public int startPos = 0;
+    public GameObject startRoom;
+    public GameObject endRoom;
     public Rule[] rooms;
     public Vector2 offset;
 
@@ -46,15 +48,33 @@ public class DungeonGenerator : MonoBehaviour
         MazeGenerator();
     }
 
-    void GenerateDungeon()
+    public void GenerateDungeon()
     {
+        int endPos = board.Count - 1;
 
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
             {
-                Cell currentCell = board[(i + j * size.x)];
-                if (currentCell.visited)
+                int cellIndex = i + j * size.x;
+                Cell currentCell = board[cellIndex];
+
+                if (!currentCell.visited)
+                    continue;
+
+                if (cellIndex == startPos)
+                {
+                    var newRoom = Instantiate(startRoom, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+                    newRoom.UpdateRoom(currentCell.status);
+                    newRoom.name += " Start " + i + "-" + j;
+                }
+                else if (cellIndex == endPos)
+                {
+                    var newRoom = Instantiate(endRoom, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+                    newRoom.UpdateRoom(currentCell.status);
+                    newRoom.name += " End " + i + "-" + j;
+                }
+                else
                 {
                     int randomRoom = -1;
                     List<int> availableRooms = new List<int>();
@@ -63,17 +83,18 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         int p = rooms[k].ProbabilityOfSpawning(i, j);
 
-                        if(p == 2)
+                        if (p == 2)
                         {
                             randomRoom = k;
                             break;
-                        } else if (p == 1)
+                        }
+                        else if (p == 1)
                         {
                             availableRooms.Add(k);
                         }
                     }
 
-                    if(randomRoom == -1)
+                    if (randomRoom == -1)
                     {
                         if (availableRooms.Count > 0)
                         {
@@ -85,18 +106,15 @@ public class DungeonGenerator : MonoBehaviour
                         }
                     }
 
-
                     var newRoom = Instantiate(rooms[randomRoom].room, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
                     newRoom.UpdateRoom(currentCell.status);
                     newRoom.name += " " + i + "-" + j;
-
                 }
             }
         }
-
     }
 
-    void MazeGenerator()
+    private void MazeGenerator()
     {
         board = new List<Cell>();
 
@@ -114,13 +132,13 @@ public class DungeonGenerator : MonoBehaviour
 
         int k = 0;
 
-        while (k<1000)
+        while (k < 1000)
         {
             k++;
 
             board[currentCell].visited = true;
 
-            if(currentCell == board.Count - 1)
+            if (currentCell == board.Count - 1)
             {
                 break;
             }
@@ -184,12 +202,12 @@ public class DungeonGenerator : MonoBehaviour
         GenerateDungeon();
     }
 
-    List<int> CheckNeighbors(int cell)
+    private List<int> CheckNeighbors(int cell)
     {
         List<int> neighbors = new List<int>();
 
         //check up neighbor
-        if (cell - size.x >= 0 && !board[(cell-size.x)].visited)
+        if (cell - size.x >= 0 && !board[(cell - size.x)].visited)
         {
             neighbors.Add((cell - size.x));
         }
@@ -201,15 +219,15 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         //check right neighbor
-        if ((cell+1) % size.x != 0 && !board[(cell +1)].visited)
+        if ((cell + 1) % size.x != 0 && !board[(cell + 1)].visited)
         {
-            neighbors.Add((cell +1));
+            neighbors.Add((cell + 1));
         }
 
         //check left neighbor
         if (cell % size.x != 0 && !board[(cell - 1)].visited)
         {
-            neighbors.Add((cell -1));
+            neighbors.Add((cell - 1));
         }
 
         return neighbors;
