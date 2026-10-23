@@ -11,12 +11,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-
-            PhotonView view = GetComponent<PhotonView>();
-            if (view != null && view.ViewID == 0)
-            {
-                view.ViewID = 7;
-            }
         }
         else if (instance != this)
         {
@@ -26,20 +20,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonNetwork.ConnectUsingSettings(); //connect to the server
-        Debug.Log("Connecting to Photon server...");
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public void CreateRoom(string roomName)
     {
         PhotonNetwork.CreateRoom(roomName);
-        Debug.Log("Room Created: " + roomName);
     }
 
     public void JoinRoom(string roomName)
     {
         PhotonNetwork.JoinRoom(roomName);
-        Debug.Log("Joined Room: " + roomName);
     }
 
     [PunRPC]
@@ -47,20 +38,4 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel(sceneName);
     }
-
-
-
-    //test methods
-    /*public override void OnConnectedToMaster()
-    {
-        Debug.Log("Connected to Master server.");
-        CreateRoom("TestRoom");
-    }
-
-    public override void OnCreatedRoom()
-    {
-        Debug.Log("Created Room: " + PhotonNetwork.CurrentRoom.Name);
-    }*/
-
-
 }

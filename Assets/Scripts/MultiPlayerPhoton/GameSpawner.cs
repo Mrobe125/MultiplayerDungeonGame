@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
@@ -11,6 +12,13 @@ public class GameSpawner : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        // Try spawning immediately on Start
+        StartCoroutine(TrySpawnWithRetry());
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
         TrySpawnPlayer();
     }
 
@@ -19,11 +27,34 @@ public class GameSpawner : MonoBehaviourPunCallbacks
         TrySpawnPlayer();
     }
 
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
+    //public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, System.Collections.Hashtable changedProps)
+    //{
+    //    // Check if the update belongs to local player and contains the prefab key
+    //    if (targetPlayer.IsLocal && changedProps.ContainsKey("AssignedPrefab"))
+    //    {
+    //        TrySpawnPlayer();
+    //    }
+    //}
+
+    private IEnumerator TrySpawnWithRetry()
     {
-        if (targetPlayer.IsLocal && changedProps.ContainsKey("AssignedPrefab"))
+        // Retry loop to handle race conditions during scene load
+        float timeout = 10f;
+        float timer = 0f;
+
+        while (!hasSpawned && timer < timeout)
         {
             TrySpawnPlayer();
+
+            if (hasSpawned) break;
+
+            yield return new WaitForSeconds(0.2f);
+            timer += 0.2f;
+        }
+
+        if (!hasSpawned)
+        {
+            Debug.LogError($"[GameSpawner] Failed to spawn Actor {PhotonNetwork.LocalPlayer.ActorNumber} after 10 seconds. Check if 'AssignedPrefab' custom property is set.");
         }
     }
 
@@ -35,11 +66,17 @@ public class GameSpawner : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("AssignedPrefab", out object prefabObj))
         {
-            Debug.LogWarning($"[GameSpawner] Waiting for 'AssignedPrefab' custom property to sync for Actor {PhotonNetwork.LocalPlayer.ActorNumber}...");
+            Debug.LogWarning($"[GameSpawner] Waiting for 'AssignedPrefab' custom property for Actor {PhotonNetwork.LocalPlayer.ActorNumber}...");
             return;
         }
 
         string prefabToSpawn = (string)prefabObj;
+
+        if (string.IsNullOrEmpty(prefabToSpawn))
+        {
+            Debug.LogError($"[GameSpawner] 'AssignedPrefab' property was empty for Actor {PhotonNetwork.LocalPlayer.ActorNumber}!");
+            return;
+        }
 
         Vector3 spawnPosition = Vector3.zero;
         Quaternion spawnRotation = Quaternion.identity;
@@ -57,12 +94,19 @@ public class GameSpawner : MonoBehaviourPunCallbacks
 
         hasSpawned = true;
 
+        // Instantiate across the network for the local client
         GameObject playerObj = PhotonNetwork.Instantiate(
             prefabToSpawn,
             spawnPosition,
             spawnRotation
         );
 
-        Debug.Log($"[GameSpawner] Successfully spawned {prefabToSpawn} for Actor {PhotonNetwork.LocalPlayer.ActorNumber}");
+        PlayerMovement movementScript = playerObj.GetComponent<PlayerMovement>();
+        if (movementScript != null)
+        {
+            movementScript.InitializePlayer(PhotonNetwork.LocalPlayer);
+        }
+
+        Debug.Log($"[GameSpawner] Successfully spawned '{prefabToSpawn}' for Actor {PhotonNetwork.LocalPlayer.ActorNumber}");
     }
 }

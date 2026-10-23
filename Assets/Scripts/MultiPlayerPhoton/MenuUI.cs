@@ -52,7 +52,7 @@ public class MenuUI : MonoBehaviourPunCallbacks
         NetworkManager.instance.JoinRoom(roomNameInput.text);
     }
 
-    #region LobbySetup
+    #region Lobby Setup
 
     [PunRPC]
     public void UpdateLobbyUI()
@@ -60,14 +60,10 @@ public class MenuUI : MonoBehaviourPunCallbacks
         playerListText.text = "";
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            Debug.Log("Player in lobby: " + player.NickName);
             playerListText.text += player.NickName + "\n";
         }
 
-        if (PhotonNetwork.IsMasterClient)
-            startGameButton.interactable = true;
-        else
-            startGameButton.interactable = false;
+        startGameButton.interactable = PhotonNetwork.IsMasterClient;
     }
 
     public override void OnJoinedRoom()
@@ -89,7 +85,15 @@ public class MenuUI : MonoBehaviourPunCallbacks
 
     public void OnStartGameButton()
     {
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "DungeonGeneratorScene");
+        LobbyManager lobbyManager = FindAnyObjectByType<LobbyManager>();
+        if (lobbyManager != null)
+        {
+            lobbyManager.StartGame("DungeonGeneratorScene");
+        }
+        else
+        {
+            NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "DungeonGeneratorScene");
+        }
     }
 
     #endregion
