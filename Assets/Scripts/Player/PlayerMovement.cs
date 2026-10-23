@@ -4,42 +4,41 @@ using Photon.Pun;
 using Photon.Realtime;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(Animator))]
+[RequireComponent(typeof(PhotonView), typeof(PhotonTransformView), typeof(PhotonAnimatorView))]
 public class PlayerMovement : MonoBehaviourPunCallbacks
 {
     [Header("Network Identity")]
     [HideInInspector] public int id;
     public Player photonPlayer;
 
-    [Header("Movement")]
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 5f;
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5.0f;
+    [SerializeField] private float jumpForce = 5.0f;
 
-    [Header("Camera")]
+    [Header("Camera & Look Settings")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float mouseSensitivity = 0.1f;
-    [SerializeField] private float maxPitch = 80f;
-    [SerializeField] private float minPitch = -80f;
+    [SerializeField] private float maxPitch = 80.0f;
+    [SerializeField] private float minPitch = -80.0f;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.2f;
 
-    [Header("Animation")]
+    [Header("Animation Settings")]
     [SerializeField] private float animationDampTime = 0.1f;
 
+    private Animator _anim;
     private Rigidbody rb;
-    private Animator anim;
-    private PlayerInput playerInput;
-
     private Vector2 moveInput;
     private Vector2 lookInput;
-
-    private float cameraPitch;
+    private float cameraPitch = 0.0f;
     private bool isGrounded;
     private bool wasGrounded;
 
+    // Hashes for optimal parameter updates
     private static readonly int HorizontalHash = Animator.StringToHash("Horizontal");
     private static readonly int VerticalHash = Animator.StringToHash("Vertical");
     private static readonly int IsJumpHash = Animator.StringToHash("IsJump");
@@ -47,76 +46,51 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-        playerInput = GetComponent<PlayerInput>();
+        _anim = GetComponent<Animator>();
     }
 
     private void Start()
     {
-        // Enforce Ownership Control Settings
         if (photonView.IsMine)
         {
-            // Enable local control systems for local owner
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            if (playerCamera != null)
-                playerCamera.enabled = true;
-
-            if (playerInput != null)
-                playerInput.enabled = true;
+            if (playerCamera != null) playerCamera.enabled = true;
         }
         else
         {
-            // Disable local control & rendering systems for remote players
-            if (playerCamera != null)
-                playerCamera.enabled = false;
-
-            if (playerInput != null)
-                playerInput.enabled = false;
-
-            AudioListener listener = GetComponentInChildren<AudioListener>();
-            if (listener != null)
-                listener.enabled = false;
+            if (playerCamera != null) playerCamera.enabled = false;
+            rb.isKinematic = true; // Disable physics simulation for non-owned network proxies
         }
     }
 
+    [PunRPC]
     public void InitializePlayer(Player player)
     {
         photonPlayer = player;
-        if (player != null)
-            id = player.ActorNumber;
+        id = player.ActorNumber;
     }
 
     private void Update()
     {
-        // Guard clause: Only the local owner calculates updates
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine) return;
 
+        // Ground check handling
         wasGrounded = isGrounded;
-
         if (groundCheck != null)
         {
-            isGrounded = Physics.CheckSphere(
-                groundCheck.position,
-                groundDistance,
-                groundLayer
-            );
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
         }
         else
         {
-            isGrounded = Physics.Raycast(
-                transform.position,
-                Vector3.down,
-                1.1f,
-                groundLayer
-            );
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
         }
 
-        if (isGrounded && !wasGrounded && anim != null)
+        // Reset jump animation flag on land
+        if (isGrounded && !wasGrounded && _anim != null)
         {
-            anim.SetBool(IsJumpHash, false);
+            _anim.SetBool(IsJumpHash, false);
         }
 
         HandleLook();
@@ -124,51 +98,39 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        // Guard clause: Only the local owner calculates physics
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine) return;
 
         HandleMovement();
     }
 
     #region Input System Callbacks
-
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine)
-            return;
-
+        if (!photonView.IsMine) return;
         moveInput = context.ReadValue<Vector2>();
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine)
-            return;
-
+        if (!photonView.IsMine) return;
         lookInput = context.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine || !context.performed || !isGrounded)
-            return;
+        if (!photonView.IsMine) return;
 
-        rb.linearVelocity = new Vector3(
-            rb.linearVelocity.x,
-            0f,
-            rb.linearVelocity.z
-        );
+        if (context.performed && isGrounded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-        rb.AddForce(
-            Vector3.up * jumpForce,
-            ForceMode.Impulse
-        );
-
-        if (anim != null)
-            anim.SetBool(IsJumpHash, true);
+            if (_anim != null)
+            {
+                _anim.SetBool(IsJumpHash, true);
+            }
+        }
     }
-
     #endregion
 
     private void HandleLook()
@@ -179,11 +141,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         transform.Rotate(Vector3.up * mouseX);
 
         cameraPitch -= mouseY;
-        cameraPitch = Mathf.Clamp(
-            cameraPitch,
-            minPitch,
-            maxPitch
-        );
+        cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
 
         if (cameraTransform != null)
         {
@@ -193,41 +151,24 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
 
     private void HandleMovement()
     {
-        if (cameraTransform == null)
-            return;
+        if (cameraTransform == null) return;
 
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
 
         forward.y = 0f;
         right.y = 0f;
-
         forward.Normalize();
         right.Normalize();
 
-        Vector3 direction = (forward * moveInput.y + right * moveInput.x) * moveSpeed;
+        Vector3 moveDirection = (forward * moveInput.y + right * moveInput.x) * moveSpeed;
+        rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
 
-        rb.linearVelocity = new Vector3(
-            direction.x,
-            rb.linearVelocity.y,
-            direction.z
-        );
-
-        if (anim != null)
+        // --- Update Blend Tree & Jump Animator Parameters ---
+        if (_anim != null)
         {
-            anim.SetFloat(
-                HorizontalHash,
-                moveInput.x,
-                animationDampTime,
-                Time.fixedDeltaTime
-            );
-
-            anim.SetFloat(
-                VerticalHash,
-                moveInput.y,
-                animationDampTime,
-                Time.fixedDeltaTime
-            );
+            _anim.SetFloat(HorizontalHash, moveInput.x, animationDampTime, Time.fixedDeltaTime);
+            _anim.SetFloat(VerticalHash, moveInput.y, animationDampTime, Time.fixedDeltaTime);
         }
     }
 }

@@ -5,12 +5,19 @@ using ExitGames.Client.Photon;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    [Header("Available Prefabs (Must be inside Resources/ folder)")]
-    [SerializeField] private GameObject[] availablePlayerPrefabs;
+    [Header("Player Prefab Inspector Slots (Must be in Resources/ folder)")]
+    [SerializeField] private GameObject player1Prefab;
+    [SerializeField] private GameObject player2Prefab;
+
+    private void Awake()
+    {
+        // Crucial: Must be set true on ALL clients BEFORE joining rooms/loading levels
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
 
     private void Start()
     {
-        if (PhotonNetwork.InRoom)
+        if (PhotonNetwork.InRoom && PhotonNetwork.LocalPlayer.ActorNumber > 0)
         {
             AssignPlayerPrefab();
         }
@@ -18,46 +25,56 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        AssignPlayerPrefab();
+        // Double check valid Actor ID before setting custom properties
+        if (PhotonNetwork.LocalPlayer.ActorNumber > 0)
+        {
+            AssignPlayerPrefab();
+        }
     }
 
     private void AssignPlayerPrefab()
     {
-        if (availablePlayerPrefabs == null || availablePlayerPrefabs.Length == 0)
+        int actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
+        if (actorNum <= 0) return; // Prevent setting properties with invalid actor -1
+
+        // Master Client / First Player = player1Prefab; Client 2 = player2Prefab
+        bool isPlayer1 = PhotonNetwork.IsMasterClient || actorNum == 1;
+        GameObject selectedPrefab = isPlayer1 ? player1Prefab : player2Prefab;
+
+        if (selectedPrefab == null)
         {
-            Debug.LogError("[LobbyManager] No player prefabs assigned in the Inspector!");
+            Debug.LogError($"[LobbyManager] Missing prefab assignment for {(isPlayer1 ? "Player 1" : "Player 2")}!");
             return;
         }
 
-        int actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
-        // Deterministic Index: Actor 1 -> Index 0 | Actor 2 -> Index 1
-        int playerIndex = (actorNum - 1) % availablePlayerPrefabs.Length;
-        string assignedPrefabName = availablePlayerPrefabs[playerIndex].name;
-
         Hashtable customProps = new Hashtable
         {
-            { "AssignedPrefab", assignedPrefabName }
+            { "AssignedPrefab", selectedPrefab.name }
         };
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(customProps);
 
-        Debug.Log($"[LobbyManager] Local Actor {actorNum} assigned Prefab [{playerIndex}]: {assignedPrefabName}");
+        Debug.Log($"[LobbyManager] Local Actor {actorNum} (IsMaster: {PhotonNetwork.IsMasterClient}) assigned Prefab: {selectedPrefab.name}");
     }
 
     public void StartGame(string gameSceneName)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
 
         if (!AreAllPlayersAssigned())
+        {
+            Debug.LogWarning("[LobbyManager] Cannot start: Waiting for all players to assign properties.");
             return;
+        }
 
-        PhotonNetwork.AutomaticallySyncScene = true;
+        // Master loads level; AutomaticallySyncScene will force all connected clients to switch scene automatically
         PhotonNetwork.LoadLevel(gameSceneName);
     }
 
     private bool AreAllPlayersAssigned()
     {
+        if (PhotonNetwork.CurrentRoom == null) return false;
+
         foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
             if (!player.CustomProperties.TryGetValue("AssignedPrefab", out object prefabObj) || string.IsNullOrEmpty((string)prefabObj))

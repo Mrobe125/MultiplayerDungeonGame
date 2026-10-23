@@ -366,9 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae2d61e8df1dbf4bb50d32f255c43fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
-  availablePlayerPrefabs:
-  - {fileID: 3231065740911776895, guid: 70ec3846442a9ff4c82d461c281e2bc0, type: 3}
-  - {fileID: 3231065740911776895, guid: 695eda9000cc9f24e82132ebee578b1b, type: 3}
+  player1Prefab: {fileID: 3231065740911776895, guid: 70ec3846442a9ff4c82d461c281e2bc0, type: 3}
+  player2Prefab: {fileID: 3231065740911776895, guid: 695eda9000cc9f24e82132ebee578b1b, type: 3}
 --- !u!1 &146741198
 GameObject:
   m_ObjectHideFlags: 0
