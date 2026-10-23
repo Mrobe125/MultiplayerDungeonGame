@@ -35,10 +35,12 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
     private Vector2 lookInput;
     private float cameraPitch = 0.0f;
     private bool isGrounded;
+    private bool wasGrounded;
 
     // Hashes for optimal parameter updates
     private static readonly int HorizontalHash = Animator.StringToHash("Horizontal");
     private static readonly int VerticalHash = Animator.StringToHash("Vertical");
+    private static readonly int IsJumpHash = Animator.StringToHash("IsJump");
 
     private void Awake()
     {
@@ -74,6 +76,7 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         if (!photonView.IsMine) return;
 
         // Ground Check
+        wasGrounded = isGrounded;
         if (groundCheck != null)
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
@@ -81,6 +84,11 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         else
         {
             isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
+        }
+
+        if (isGrounded && !wasGrounded && _anim != null)
+        {
+            _anim.SetBool(IsJumpHash, false);
         }
 
         HandleLook();
@@ -114,6 +122,11 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            if (_anim != null)
+            {
+                _anim.SetBool(IsJumpHash, true);
+            }
         }
     }
     #endregion
@@ -150,7 +163,6 @@ public class PlayerMovement : MonoBehaviourPunCallbacks
         rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
 
         // --- Update Blend Tree Animator Parameters ---
-        // moveInput.x = Left/Right (-1 to 1) | moveInput.y = Forward/Backward (-1 to 1)
         if (_anim != null)
         {
             _anim.SetFloat(HorizontalHash, moveInput.x, animationDampTime, Time.fixedDeltaTime);
